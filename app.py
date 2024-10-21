@@ -4,6 +4,8 @@ from PIL import Image
 import requests
 from io import BytesIO
 
+api_key = st.secrets["OPENAI_API_KEY"]
+
 def generate_image_with_dalle(api_key, prompt, size):
     try:
         client = OpenAI(api_key=api_key)
@@ -22,7 +24,6 @@ def generate_image_with_dalle(api_key, prompt, size):
     except Exception as e:
         st.error(f"이미지 생성 중 오류 발생: {str(e)}")
         return None
-
 def main():
     st.title("DALL-E 이미지 생성기")
 
@@ -35,7 +36,8 @@ def main():
     if 'show_generate_message' not in st.session_state:
         st.session_state.show_generate_message = False
 
-    api_key = st.text_input("OpenAI API 키를 입력하세요:", type="password")
+    # Secrets에서 API 키 가져오기
+    api_key = st.secrets["OPENAI_API_KEY"]
     
     prompt = st.text_input("이미지 생성을 위한 설명을 입력하세요:")
     
@@ -58,7 +60,7 @@ def main():
 
     if generate_button:
         if not api_key:
-            st.warning("OpenAI API 키를 입력해주세요.")
+            st.warning("OpenAI API 키가 설정되지 않았습니다.")
         elif not prompt:
             st.warning("이미지 설명을 입력해주세요.")
         else:
